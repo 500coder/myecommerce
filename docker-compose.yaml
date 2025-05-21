@@ -1,0 +1,47 @@
+services:
+  db: 
+    image: postgres:latest
+    env_file:
+      - .env
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  api:
+    build: 
+      context: ./api/
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./api:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+  
+  app:
+      build: 
+        dockerfile: ./ecommerce-webapp/Dockerfile
+      ports:
+        - "3000:3000"
+      volumes:
+        - ./ecommerce-webapp:/app
+      env_file:
+        - .env
+      depends_on:
+        - db
+        - api
+
+  nginx: # Load Balancer
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - db
+      - api
+      - app
+    ports:
+      - "9999:9999"
+volumes:
+  data:
+  
