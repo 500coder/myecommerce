@@ -1,5 +1,46 @@
-from database import db
-from Models.ProductsModel import Product
+from flask import Blueprint, request, jsonify
+from ..Models import db
+from ..Models.ProductsModel import Product
+
+product_api = Blueprint('products', __name__)
+
+
+@product_api.route("/products", methods=['GET']) # requested by Product List with or without search params (query)
+@product_api.route("/product/<id>", methods=['GET']) # requested by product detail page (id)
+def get_products(id=None):
+    args = request.args.to_dict()
+    query = args.get("query")
+
+    if(args.get("pageSize") and args.get("currentPage")):
+        page_size = int(args.get("pageSize"))
+        current_page = int(args.get("currentPage"))
+
+    
+    if(query is None and id is not None): # return product base on id, 
+        
+        product = Product.query.filter(Product.id==id).first()
+        return jsonify(product.serialized) if product else jsonify({'error': 'Produto não encontrado'}), 404
+
+    elif(query is None and id is None): # return all products
+        
+        all_products = Product.query
+
+    elif(query is not None and id is None): # return products base on search params
+        
+        all_products = Product.query.filter(
+            Product.title.ilike(f'%{query}%'))
+    
+    pagination = all_products.paginate(page=current_page, per_page=page_size, error_out=False)
+
+    return jsonify({
+        'query': query, 
+        'pageSize': page_size, 
+        'currentPage': current_page, 
+        'totalItems': pagination.total, 
+        'totalPages': pagination.pages, 
+        'results': [p.serialized for p in pagination.items]
+        })
+    
 
 def run_products(app):
 

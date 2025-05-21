@@ -1,8 +1,26 @@
-from database import db
-from Models.OrdersModel import Orders
-from Controller.CartController import get_by_code
+from flask import Blueprint, request, jsonify
+
+from ..Models import db
+from ..Models.OrdersModel import Orders
+from .CartController import get_by_code
 from datetime import datetime, timezone
 from decimal import *
+
+order_api = Blueprint('orders', __name__)
+
+@order_api.route("/order/", methods=['POST'])
+def order():
+    payload = request.get_json()
+    cart_code = payload['cart_code']
+    order = create_from(cart_code)
+
+    return jsonify(order.serialized)
+
+
+@order_api.route("/order/<cart_code>", methods=['GET'])
+def get_order():
+    return
+
 
 def create_from(cart_code):
 

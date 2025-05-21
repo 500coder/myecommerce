@@ -1,4 +1,4 @@
-from database import db
+from ..Models import db
 
 def reset_migrations(app):
     with app.app_context():

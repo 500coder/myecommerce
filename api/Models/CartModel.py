@@ -1,4 +1,4 @@
-from database import db
+from . import db
 from flask import json
 
 class Cart(db.Model):

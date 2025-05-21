@@ -1,7 +1,36 @@
-from database import db
-from Models.CartModel import Cart
+from ..Models import db
+from ..Models.CartModel import Cart
 from datetime import datetime, timezone
-from flask import json, jsonify
+from flask import Blueprint, json, jsonify, request
+
+cart_api = Blueprint('cart', __name__)
+
+@cart_api.route("/cart", methods=['GET'])
+@cart_api.route("/cart/<cart_code>", methods=['GET'])
+def get(cart_code=None):
+    """ List all carts or that one which cart_code is matched """
+
+    if cart_code is not None:
+        cart = Cart.query.filter(
+            Cart.code == cart_code
+        ).one()
+    
+        return jsonify(cart.serialized)
+    
+    else:
+        carts = Cart.query.all()
+        print('carts: ', carts)
+        return jsonify({'carts': c.serialized for c in carts})
+    
+@cart_api.route("/cart/<cart_code>", methods=['PUT'])
+def put(cart_code=None):
+    """ Update cart from payloaded products list"""
+    payload = request.get_json()
+    #if(payload):
+    return update_cart(payload, cart_code)
+    #else:
+    #    return jsonify({'message': 'Erro - Payload nulo'}), 402 
+
 
 def run_initial_cart(app):
     with app.app_context():

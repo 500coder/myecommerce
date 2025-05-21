@@ -32,7 +32,7 @@ services:
         - db
         - api
 
-  nginx: # Load Balancer
+  nginx: # Reverse proxy, mainly used to access container by service name, v.g. api/
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
