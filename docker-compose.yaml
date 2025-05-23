@@ -3,8 +3,8 @@ services:
     image: postgres:latest
     env_file:
       - .env
-    volumes:
-      - data:/var/lib/postgresql/data
+    # volumes:
+    #   - data:/var/lib/postgresql/data
 
   api:
     # image: 605dev/ecommerce-api
@@ -13,8 +13,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
-    volumes:
-      - ./api:/app
+    # volumes:
+    #   - ./api:/app
     env_file:
       - .env
     depends_on:
@@ -23,11 +23,12 @@ services:
   app:
       # image: 605dev/ecommerce-webapp
       build: 
-        dockerfile: ./ecommerce-webapp/Dockerfile
+        context: ./ecommerce-webapp/
+        dockerfile: Dockerfile
       ports:
         - "3000:3000"
-      volumes:
-        - ./ecommerce-webapp:/app
+      # volumes:
+      #   - ./ecommerce-webapp:/app
       env_file:
         - .env
       depends_on:
