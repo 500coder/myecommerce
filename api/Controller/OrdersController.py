@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, json
 
 from ..Models import db
 from ..Models.OrdersModel import Orders
@@ -17,17 +17,12 @@ def order():
     return jsonify(order.serialized)
 
 
-@order_api.route("/order/<cart_code>", methods=['GET'])
-def get_order():
-    return
-
-
 def create_from(cart_code):
 
     with db.session.begin():
         cart = get_by_code(cart_code)
         now = datetime.now(timezone.utc)
-        order = Orders(products=cart.content, amount=sum_total(cart), created_at=now, updated_at=now, status='DONE')
+        order = Orders(products=cart.content, amount=sum_total(cart.serialized['products']), created_at=now, updated_at=now, status='DONE')
     
         db.session.add(order)
         db.session.commit()
@@ -37,6 +32,6 @@ def create_from(cart_code):
 
 def sum_total(cart):
     total = 0
-    for p in cart.serialized['products']:
+    for p in cart:
         total = total + (Decimal(p['unitPrice']) * int(p['quantity']))
-    return total
+    return float(round(total, 2))

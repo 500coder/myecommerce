@@ -36,31 +36,7 @@ def run_initial_cart(app):
     with app.app_context():
         now = datetime.now(timezone.utc)
         cart_products = "[]"
-        # cart_products = """
-        # [
-        #  {
-        #         "unitPrice": "123.45",
-        #         "id": 1,
-        #         "quantity": 1,
-        #         "title": "Caneca de Ceramica",
-        #         "thumbnailUrl": "https://placehold.co/100"
-        #     },
-        #     {
-        #         "unitPrice": "123.45",
-        #         "id": 2,
-        #         "quantity": 1,
-        #         "title": "Caneca Aluminio",
-        #         "thumbnailUrl": "https://placehold.co/100"
-        #     },
-        #     {
-        #         "unitPrice": "123.45",
-        #         "id": 3,
-        #         "quantity": 1,
-        #         "title": "Caneca Barro",
-        #         "thumbnailUrl": "https://placehold.co/100"
-        #     }           
-        # ]    
-        # """
+        
 
         cart = Cart(code="fixed-cart-code", content=cart_products, created_at=now, updated_at=now)
 
