@@ -2,9 +2,13 @@ FROM node:23-bookworm-slim
 
 WORKDIR /app
 
-COPY . /app
+COPY package*.json ./
 
-RUN npm install next
+
+
+RUN npm install 
+
+COPY . .
 
 EXPOSE 3000
 
