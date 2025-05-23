@@ -7,10 +7,10 @@ services:
     #   - data:/var/lib/postgresql/data
 
   api:
-    image: 605dev/ecommerce-api
-    # build: 
-    #   context: ./api/
-    #   dockerfile: Dockerfile
+    # image: 605dev/ecommerce-api
+    build: 
+      context: ./api/
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     # volumes:
@@ -21,10 +21,10 @@ services:
       - db
   
   app:
-      image: 605dev/ecommerce-webapp
-      # build: 
-      #   context: ./ecommerce-webapp/
-      #   dockerfile: Dockerfile
+      # image: 605dev/ecommerce-webapp
+      build: 
+        context: ./ecommerce-webapp/
+        dockerfile: Dockerfile
       ports:
         - "3000:3000"
       # volumes:
