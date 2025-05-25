@@ -19,25 +19,20 @@ def get(cart_code=None):
     
     else:
         carts = Cart.query.all()
-        print('carts: ', carts)
         return jsonify({'carts': c.serialized for c in carts})
     
 @cart_api.route("/cart/<cart_code>", methods=['PUT'])
 def put(cart_code=None):
     """ Update cart from payloaded products list"""
     payload = request.get_json()
-    #if(payload):
     return update_cart(payload, cart_code)
-    #else:
-    #    return jsonify({'message': 'Erro - Payload nulo'}), 402 
+
 
 
 def run_initial_cart(app):
     with app.app_context():
         now = datetime.now(timezone.utc)
         cart_products = "[]"
-        
-
         cart = Cart(code="fixed-cart-code", content=cart_products, created_at=now, updated_at=now)
 
         db.session.add(cart)

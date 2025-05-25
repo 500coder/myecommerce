@@ -14,8 +14,10 @@ def get_products(id=None):
     if(args.get("pageSize") and args.get("currentPage")):
         page_size = int(args.get("pageSize"))
         current_page = int(args.get("currentPage"))
+    else:
+        page_size = 10
+        current_page = 1
 
-    
     if(query is None and id is not None): # return product base on id, 
         
         product = Product.query.filter(Product.id==id).first()
